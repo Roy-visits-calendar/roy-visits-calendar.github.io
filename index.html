@@ -53,6 +53,7 @@ select,input{font-size:16px;height:40px;border:1px solid #d6d2c8;border-radius:8
 .hbtn{border:none;background:none;font-size:20px;cursor:pointer;color:#666;padding:4px 8px}
 .hpanel{background:#FAEEDA;border-radius:12px;padding:12px 14px;margin:0 4px 10px;color:#633806}
 .ev .s{display:none}.ev .t{display:block}.hs{display:none}@media(pointer:coarse),(max-width:600px){.hs{display:block}}@media(max-width:600px){.grid{grid-template-columns:30px repeat(7,minmax(0,1fr))}.hr{font-size:9px;left:1px}.ev{font-size:10px;line-height:1.2;padding:2px;word-break:normal;overflow-wrap:normal}.ev .f,.ev .d{display:none}.ev .s{display:block}.ev .t{font-size:9px;opacity:.8}.fr{background:#F3F8EC;border:none;border-right:3px solid #97C459;border-radius:4px;color:#3B6D11}.fr b{font-weight:500}}.past{opacity:.5}.rt{background:#ECEAE4;color:#5F5E5A;border:none;z-index:2;font-size:10px}
+.lk{background:#C9C7BE;color:#2C2C2A;border:none;z-index:2;font-size:11px;background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(255,255,255,.3) 6px 12px)}
 </style>
 </head>
 <body>
@@ -76,7 +77,7 @@ select,input{font-size:16px;height:40px;border:1px solid #d6d2c8;border-radius:8
 <span><span class="sw" style="background:#EAF3DE;border:1px dashed #639922"></span>פנוי</span>
 <span><span class="sw" style="background:#FAC775"></span>תפוס</span>
 <span><span class="sw" style="background:#FAC775;border:2px solid #854F0B"></span>שלך</span>
-<span><span class="sw" style="background:#E6F1FB;border:1px solid #85B7EB"></span>הקרנה / טיפול</span>
+<span><span class="sw" style="background:#E6F1FB;border:1px solid #85B7EB"></span>הקרנה / טיפול</span> <span><span class="sw" style="background:#C9C7BE"></span>זמן לבד</span>
 </div>
 <div id="sheet"></div>
 <div class="chat">
@@ -118,7 +119,7 @@ for(let i=0;i<7;i++){const ds=addDays(start,i);g+=`<div class="col" style="heigh
 for(let h=H0+1;h<H1;h++)g+=`<div class="hl" style="top:${y(h)}px"></div>`;
 const de=dayEvs(ds);
 const dn=de.find(o=>/ארוחת ערב/.test(o.title)),ct=dn?hOf(dn.a,ds):99;const bz=de.filter(o=>!o.free).map(o=>[hOf(o.a,ds),hOf(o.b,ds)]).sort((p,q)=>p[0]-q[0]);const gaps=(p,q)=>{const out=[];let s=p;bz.forEach(([a,b])=>{if(b<=s||a>=q)return;if(a-s>=0.5)out.push([s,a]);s=Math.max(s,b)});if(q-s>=0.5)out.push([s,q]);return out.filter(r=>r[0]<ct).map(r=>[r[0],Math.min(r[1],ct)])};de.forEach(e=>{if(e.sb<now)return;const sa=hOf(e.sa,ds),sb=hOf(e.sb,ds);if(!e.free&&!(e.slot&&e.part))return;gaps(sa,sb).forEach(([p,q])=>{const whole=e.free&&p===sa&&q===sb,big=y(q)-y(p)>44;g+=block('fr',p,q,ds,`<b>פנוי</b>${e.free&&big?'<span class="d"><br>'+esc(label(e.title))+'</span>':''}`,whole?`openFree('${e.id}')`:`openRange(${ds},${p},${q})`)})});
-const rt=e=>!e.free&&!e.ride&&!e.keys.length&&!e.slot&&!/ביקור/.test(e.title);de.filter(rt).forEach(e=>{const a=hOf(e.a,ds),b=hOf(e.b,ds);g+=block(`rt ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(e.title.split(/[.–-]/)[0])}</b>`,`openEv('${e.id}')`)});const tk=de.filter(e=>!e.free&&!rt(e)).sort((p,q)=>p.a-q.a),cols=[];
+const isLk=e=>/זמן לבד/.test(e.title);const rt=e=>!e.free&&!e.ride&&!e.keys.length&&!e.slot&&!/ביקור/.test(e.title);de.filter(rt).forEach(e=>{const a=hOf(e.a,ds),b=hOf(e.b,ds);g+=isLk(e)?block(`lk ${e.b<now?'past':''}`,a,b,ds,`<b>🔒 זמן לבד</b><span class="t"> ${hm(a)}–${hm(b)}</span>`,`openEv('${e.id}')`):block(`rt ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(e.title.split(/[.–-]/)[0])}</b>`,`openEv('${e.id}')`)});const tk=de.filter(e=>!e.free&&!rt(e)).sort((p,q)=>p.a-q.a),cols=[];
 tk.forEach(e=>{let c=0;while(cols[c]&&cols[c]>e.a)c++;cols[c]=e.b;e._c=c});
 tk.forEach(e=>{const n=tk.filter(o=>o.a<e.b&&o.b>e.a).length,c=e._c%Math.max(n,1),w=100/Math.max(n,1);
 const a=hOf(e.a,ds),b=hOf(e.b,ds),nm=e.keys.map(k=>(PEOPLE.find(p=>p.key===k)||{}).name).filter(Boolean).join(', '),sh=e.ride?(/טיפול/.test(e.title)&&!/הקרנה/.test(e.title)?'טיפול':'הקרנה')+(nm?' · '+nm:''):(nm||e.title.split(/[.–-]/)[0]);
@@ -135,10 +136,11 @@ function call(fn,args,after){GEN++;CACHE={};document.getElementById('loading').s
 function forWhom(){return ME.admin?`<div class="row" style="margin-top:8px"><span>לרשום את:</span><select id="fw" onchange="document.getElementById('fwn').style.display=this.value==='__o'?'':'none'">${PEOPLE.map(p=>`<option value="${p.key}" ${p.key===ME.key?'selected':''}>${p.name}</option>`).join('')}<option value="__o">אחר (לכתוב שם)…</option></select><input id="fwn" placeholder="שם" style="display:none;width:140px"></div>`:''}
 function fwVal(){const s=document.getElementById('fw');if(!s)return null;if(s.value==='__o')return 'name:'+document.getElementById('fwn').value.trim();return s.value}
 function openFree(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStart(e.sa);
-sheetHtml(esc(label(e.title))+' · '+dlabel(ds),'המשבצת פנויה. אפשר לבחור גם רק חלק מהזמן.',ds,hOf(e.sa,ds),hOf(e.sb,ds),`<button class="btn" onclick="doBook()">${G('אני מגיעה','אני מגיע')}</button>`,forWhom())}
-function openRange(ds,a,b){sheetHtml('זמן פנוי · '+dlabel(ds),'אפשר לבחור גם רק חלק מהזמן.',ds,a,b,`<button class="btn" onclick="doBook()">${G('אני מגיעה','אני מגיע')}</button>`,forWhom())}
+sheetHtml(esc(label(e.title))+' · '+dlabel(ds),'המשבצת פנויה. אפשר לבחור גם רק חלק מהזמן.',ds,hOf(e.sa,ds),hOf(e.sb,ds),`<button class="btn" onclick="doBook()">${G('אני מגיעה','אני מגיע')}</button>`+lockBtn(),forWhom())}
+function openRange(ds,a,b){sheetHtml('זמן פנוי · '+dlabel(ds),'אפשר לבחור גם רק חלק מהזמן.',ds,a,b,`<button class="btn" onclick="doBook()">${G('אני מגיעה','אני מגיע')}</button>`+lockBtn(),forWhom())}
 function doBook(){const t=times();if(t)call('book',[ME.token,t[0],t[1],fwVal()])}
-function openEv(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStart(e.a),a=hOf(e.a,ds),b=hOf(e.b,ds),mine=isMine(e);
+function lockBtn(){return ME.admin?'<button class="lnk" onclick="doBlock()">🔒 לסגור כזמן לבד</button>':''}function doBlock(){const t=times();if(t)call('block',[ME.token,t[0],t[1]])}
+function openEv(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStart(e.a),a=hOf(e.a,ds),b=hOf(e.b,ds),mine=isMine(e);if(/זמן לבד/.test(e.title)){if(!ME.admin){document.getElementById('sheet').innerHTML=`<div class="sheet"><h3>🔒 זמן לבד · ${dlabel(ds)}</h3><div style="font-size:15px;margin-bottom:8px">${hm(a)}–${hm(b)}. זה זמן של רועי ונועה לבד, בלי ביקורים.</div><button class="lnk" onclick="closeSheet()">סגירה</button></div>`;return}sheetHtml('🔒 זמן לבד · '+dlabel(ds),'אפשר לשנות את השעות, או לפתוח את הזמן מחדש.',ds,a,b,`<button class="btn" onclick="doUpd('${id}')">שמירה</button><button class="lnk danger" onclick="doCancel('${id}')">לפתוח את הזמן</button>`);return}
 if(mine||ME.admin){let btns=`<button class="btn" onclick="doUpd('${id}')">שמירה</button>`;
 if(!e.ride||ME.admin)btns+=`<button class="lnk danger" onclick="doCancel('${id}')">${e.slot&&!e.ride?'ביטול (המשבצת תחזור להיות פנויה)':'ביטול'}</button>`;
 let extra='';if(ME.admin)extra=`<button class="lnk" style="margin-top:4px;color:#854F0B" onclick="this.nextElementSibling.style.display='flex';this.remove()">↪ להעביר לאדם אחר…</button><div class="row" style="margin-top:8px;display:none"><select id="asg"><option value="">למי להעביר?</option>${PEOPLE.filter(p=>p.key!==e.who).map(p=>`<option value="${p.key}">${p.name}</option>`).join('')}</select><button class="lnk" onclick="doAssign('${id}')">העברה</button></div>`;if(['neta','noa'].includes(ME.key))extra=`<div class="row" style="margin-top:8px"><span>שם:</span><input id="ttl" style="flex:1;min-width:200px" value="${esc(e.title)}"></div>`+extra;
