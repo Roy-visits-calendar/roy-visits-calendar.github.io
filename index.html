@@ -144,7 +144,7 @@ function openEv(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStar
 if(mine||ME.admin){let btns=`<button class="btn" onclick="doUpd('${id}')">שמירה</button>`;
 if(!e.ride||ME.admin)btns+=`<button class="lnk danger" onclick="doCancel('${id}')">${e.slot&&!e.ride?'ביטול (המשבצת תחזור להיות פנויה)':'ביטול'}</button>`;
 let extra='';if(ME.admin)extra=`<button class="lnk" style="margin-top:4px;color:#854F0B" onclick="this.nextElementSibling.style.display='flex';this.remove()">↪ להעביר לאדם אחר…</button><div class="row" style="margin-top:8px;display:none"><select id="asg"><option value="">למי להעביר?</option>${PEOPLE.filter(p=>p.key!==e.who).map(p=>`<option value="${p.key}">${p.name}</option>`).join('')}</select><button class="lnk" onclick="doAssign('${id}')">העברה</button></div>`;if(['neta','noa'].includes(ME.key))extra=`<div class="row" style="margin-top:8px"><span>שם:</span><input id="ttl" style="flex:1;min-width:200px" value="${esc(e.title)}"></div>`+extra;
-const sub=e.slot&&!e.ride?'משבצת קבועה '+hm(hOf(e.sa,ds))+'–'+hm(hOf(e.sb,ds))+'. אפשר לשנות שעות בתוכה.':'';
+const sub=e.slot&&!e.ride?'משבצת קבועה '+hm(hOf(e.sa,ds))+'–'+hm(hOf(e.sb,ds))+(ME.admin?'. אפשר לשנות לכל שעה (מנהלים).':'. אפשר לשנות שעות בתוכה.'):'';
 sheetHtml(esc(e.title)+' · '+dlabel(ds),sub,ds,a,b,btns,extra);return}
 const n=busyAt(e.a,e.b,null);
 let btns=n<2?`<button class="btn" onclick="doBook()">${G('אני מצטרפת','אני מצטרף')}</button>`:'';
