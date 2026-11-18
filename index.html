@@ -111,19 +111,19 @@ let CACHE={},GEN=0;function fetchWeek(s,cb,n){n=n||0;const g=GEN;RUN().withSucce
 function block(cls,a,b,ds,inner,click,pos){a=Math.max(a,H0);b=Math.min(b,H1);if(b<=a)return '';
 return `<div class="ev ${cls}" style="top:${y(a)+1}px;height:${Math.max(y(b)-y(a)-2,14)}px;${pos||'left:2px;right:2px'}" onclick="${click}">${inner}</div>`}
 function render(){
-const today=dayStart(Date.now()),now=Date.now();H1=19;for(let i=0;i<7;i++){const ds=addDays(start,i);dayEvs(ds).forEach(o=>{if(!o.free)H1=Math.max(H1,Math.min(22,Math.ceil(hOf(o.b,ds))))})}
+const today=dayStart(Date.now()),now=Date.now();H1=20;for(let i=0;i<7;i++){const ds=addDays(start,i);dayEvs(ds).forEach(o=>{if(!o.free)H1=Math.max(H1,Math.min(22,Math.ceil(hOf(o.b,ds))))})}
 let hd='<div></div>';for(let i=0;i<7;i++){const ds=addDays(start,i),d=new Date(ds);hd+=`<div class="dh ${ds===today?'today':''}"><div class="w">${SH[d.getDay()]}</div><div class="n">${d.getDate()}</div></div>`}
 document.getElementById('hd').innerHTML=hd;document.getElementById('rng').textContent=rngLabel();
-let g=`<div style="position:relative;height:${y(H1)}px">`;for(let h=H0+1;h<H1;h++)g+=`<div class="hr" style="top:${y(h)-7}px">${h}:00</div>`;g+='</div>';
+let g=`<div style="position:relative;height:${y(H1)}px">`;for(let h=H0+1;h<=H1;h++)g+=`<div class="hr" style="top:${h===H1?y(h)-14:y(h)-7}px">${h}:00</div>`;g+='</div>';
 for(let i=0;i<7;i++){const ds=addDays(start,i);g+=`<div class="col" style="height:${y(H1)}px">`;
 for(let h=H0+1;h<H1;h++)g+=`<div class="hl" style="top:${y(h)}px"></div>`;
 const de=dayEvs(ds);
 const dn=de.find(o=>/ארוחת ערב/.test(o.title)),ct=dn?hOf(dn.a,ds):99;const bz=de.filter(o=>!o.free).map(o=>[hOf(o.a,ds),hOf(o.b,ds)]).sort((p,q)=>p[0]-q[0]);const gaps=(p,q)=>{const out=[];let s=p;bz.forEach(([a,b])=>{if(b<=s||a>=q)return;if(a-s>=0.5)out.push([s,a]);s=Math.max(s,b)});if(q-s>=0.5)out.push([s,q]);return out.filter(r=>r[0]<ct).map(r=>[r[0],Math.min(r[1],ct)])};de.forEach(e=>{if(e.sb<now)return;const sa=hOf(e.sa,ds),sb=hOf(e.sb,ds);if(!e.free&&!(e.slot&&e.part))return;gaps(sa,sb).forEach(([p,q])=>{const whole=e.free&&p===sa&&q===sb,big=y(q)-y(p)>44;g+=block('fr',p,q,ds,`<b>פנוי</b>${e.free&&big?'<span class="d"><br>'+esc(label(e.title))+'</span>':''}`,whole?`openFree('${e.id}')`:`openRange(${ds},${p},${q})`)})});
 const rt=e=>!e.free&&!e.ride&&!e.keys.length&&!e.slot&&!/ביקור/.test(e.title);de.filter(rt).forEach(e=>{const a=hOf(e.a,ds),b=hOf(e.b,ds);g+=isLk(e)?block(`lk ${e.b<now?'past':''}`,a,b,ds,`<b>🔒 נעול</b><span class="t"> ${hm(a)}–${hm(b)}</span>`,`openEv('${e.id}')`):block(`rt ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(e.title.split(/[.–-]/)[0])}</b>`,`openEv('${e.id}')`)});const tk=de.filter(e=>!e.free&&!rt(e)).sort((p,q)=>p.a-q.a),cols=[];
 tk.forEach(e=>{let c=0;while(cols[c]&&cols[c]>e.a)c++;cols[c]=e.b;e._c=c});
-tk.forEach(e=>{const n=tk.filter(o=>o.a<e.b&&o.b>e.a).length,c=e._c%Math.max(n,1),w=100/Math.max(n,1);
+tk.forEach(e=>{const n=tk.filter(o=>o.a<e.b&&o.b>e.a).length,c=e._c%Math.max(n,1),w=100/Math.max(n,1),MOB=matchMedia('(max-width:600px)').matches;
 const a=hOf(e.a,ds),b=hOf(e.b,ds),nm=e.keys.map(k=>(PEOPLE.find(p=>p.key===k)||{}).name).filter(Boolean).join(', '),sh=e.ride?(/טיפול/.test(e.title)&&!/הקרנה/.test(e.title)?'טיפול':'הקרנה')+(nm?' · '+nm:''):(nm||e.title.split(/[.–-]/)[0]);
-g+=block(`${e.ride?'rd':'tk'} ${isMine(e)?'me':''} ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(sh)}</b><span class="t">${hm(a)}–${hm(b)}</span>`,`openEv('${e.id}')`,`right:calc(${c*w}% + 2px);width:calc(${w}% - 4px)`)});
+g+=block(`${e.ride?'rd':'tk'} ${isMine(e)?'me':''} ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(sh)}</b><span class="t">${hm(a)}–${hm(b)}</span>`,`openEv('${e.id}')`,(MOB&&n>1?`right:calc(${Math.min(c,2)*20}% + 2px);left:2px;z-index:${3+c};box-shadow:0 0 0 1.5px #fff`:`right:calc(${c*w}% + 2px);width:calc(${w}% - 4px)`))});
 g+='</div>'}
 document.getElementById('bd').innerHTML=g}
 const MON=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];function rngLabel(){const a=new Date(start),b=new Date(addDays(start,6));if(a.getMonth()===b.getMonth())return MON[a.getMonth()]+' '+a.getFullYear();if(a.getFullYear()===b.getFullYear())return MON[a.getMonth()]+' – '+MON[b.getMonth()]+' '+b.getFullYear();return MON[a.getMonth()]+' '+a.getFullYear()+' – '+MON[b.getMonth()]+' '+b.getFullYear()}function goToday(){start=wkStart(Date.now());closeSheet();load()}function mv(n){start=addDays(start,n);closeSheet();load()}
