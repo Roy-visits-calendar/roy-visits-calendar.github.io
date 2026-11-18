@@ -154,7 +154,7 @@ const n=busyAt(e.a,e.b,null);
 let btns=n<2?`<button class="btn" onclick="doBook()">${G('אני מצטרפת','אני מצטרף')}</button>`:'';
 btns+=`<button class="lnk" onclick="call('requestSwap',[ME.token,'${id}'])">בקשת החלפה</button>`;
 sheetHtml(esc(e.title)+' · '+dlabel(ds),n<2?'אפשר להצטרף, גם רק לחלק מהזמן. או לבקש להחליף.':'בזמן הזה כבר יש שני מבקרים. אפשר לבקש להחליף.',ds,a,b,btns)}
-const NOA='📱 לפני שיוצאים, תשלחו לנועה הודעה או תתקשרו אליה.';
+const NOA='📱 לפני שיוצאים, שלחו לנועה הודעה או תתקשרו אליה לוודא שאפשר לבוא.';
 function doUpd(id){const t=times();if(t)call('update',[ME.token,id,t[0],t[1],(document.getElementById('ttl')||{}).value||null])}
 function doCancel(id){if(confirm('לבטל?'))call('cancel',[ME.token,id])}
 function doAssign(id){const v=document.getElementById('asg').value;if(!v)return;call('assign',[ME.token,id,v])}
