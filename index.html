@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>לו״ז ביקורים - רועי</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"Segoe UI",Arial,sans-serif;background:#f6f5f2;color:#1f1e1c}
+.wrap{max-width:1000px;margin:0 auto;padding:12px 8px 24px}
+.card{background:#fff;border:1px solid #e6e3dc;border-radius:16px;padding:12px 8px 10px}
+.top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin:0 6px 8px}
+.top h1{font-size:19px;font-weight:600;margin:0}
+.nav button{border:none;background:none;font-size:22px;padding:4px 10px;cursor:pointer;color:#444}
+.grid{display:grid;grid-template-columns:38px repeat(7,minmax(0,1fr))}
+.nav{display:flex;align-items:center;gap:2px}.nav .tdy{font-size:14px;color:#1f1e1c;border:1px solid #d6d2c8;border-radius:999px;padding:5px 14px;margin-left:4px}.rng{font-size:17px;font-weight:500;margin:0 8px}.hd{border-bottom:1px solid #e6e3dc;padding-bottom:6px}
+.dh{text-align:center}.dh .w{font-size:12px;color:#777}.dh .n{font-size:17px;margin:2px auto 0;width:32px;height:32px;line-height:32px;border-radius:50%}
+.dh.today .w{color:#1a73e8}.dh.today .n{background:#1a73e8;color:#fff}
+.col{position:relative;border-right:1px solid #eee}
+.hl{position:absolute;left:0;right:0;border-top:1px solid #f0eee9}
+.hr{position:absolute;left:4px;font-size:11px;color:#999}
+.ev{position:absolute;border-radius:7px;padding:2px 3px;font-size:11px;line-height:1.25;word-break:break-word;overflow:hidden;cursor:pointer}
+.fr{background:#EAF3DE;border:1px dashed #639922;color:#27500A}
+.tk{background:#FAC775;color:#633806;border:1px solid #EF9F27;z-index:1}
+.rd{background:#E6F1FB;color:#0C447C;border:1px solid #85B7EB;z-index:1}
+.me{border:2px solid #854F0B}
+.legend{display:flex;gap:12px;justify-content:center;margin-top:8px;font-size:12px;color:#666;flex-wrap:wrap}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-left:3px}
+.sheet{margin-top:10px;background:#f6f5f2;border-radius:12px;padding:12px 14px}
+.sheet h3{font-size:16px;margin:0 0 8px;font-weight:600}
+select,input{font-size:16px;height:40px;border:1px solid #d6d2c8;border-radius:8px;padding:0 8px;background:#fff}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:15px}
+.btn{background:#BA7517;color:#fff;border:none;border-radius:999px;padding:9px 18px;font-size:15px;cursor:pointer}
+.lnk{background:none;border:none;font-size:15px;cursor:pointer;color:#444;padding:8px}
+.danger{color:#c0392b;background:#fff;border:1.5px solid #c0392b;border-radius:999px;padding:8px 16px;font-weight:500}
+.err{color:#c0392b;font-size:14px;min-height:20px;margin-top:4px}
+.chat{display:contents}
+.msgs{display:flex;flex-direction:column;margin-top:12px;border-top:1px solid #eee;padding:10px 6px 4px;max-height:360px;overflow-y:auto}
+.bub{max-width:85%;font-size:16px;margin:6px 0;line-height:1.6;color:#1f1e1c}
+.bot{align-self:flex-start;max-width:100%;padding:2px}.mine{background:#F0EEE6;align-self:flex-end;padding:10px 14px;border-radius:18px}
+.inp{position:sticky;bottom:8px;z-index:5;display:flex;align-items:center;gap:4px;margin-top:10px;background:#fff;border:1px solid #dedad0;border-radius:22px;padding:6px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.inp input{order:3;flex:1;height:44px;border:none;outline:none;background:transparent;font-size:16px;padding:0 10px}
+.ib{width:40px;height:40px;border-radius:12px;border:none;background:transparent;font-size:19px;cursor:pointer;color:#666;flex-shrink:0}.ib.send{order:1;display:flex;align-items:center;justify-content:center;background:#BA7517;color:#fff;font-size:20px;font-weight:700}
+#micb{order:2;display:flex;align-items:center;justify-content:center}.ib.rec{background:#E24B4A;color:#fff;border-color:#E24B4A}
+.load{text-align:center;color:#888;font-size:14px;padding:8px}
+.help{display:flex;flex-direction:column;gap:10px;margin:4px 0 14px}
+.help div{display:flex;gap:10px;align-items:center;font-size:15px;line-height:1.4}
+.help .sq{width:22px;height:22px;border-radius:6px;flex-shrink:0}
+.entry{max-width:420px;margin:24px auto 0;padding:28px 22px;text-align:center}.entry h2{font-size:24px;font-weight:700;margin:0 0 8px}.entry .sub{font-size:17px;color:#5f5e5a;line-height:1.6;margin-bottom:22px}.entry .q{display:block;font-size:17px;font-weight:600;margin:18px 0 8px}.entry input{width:100%;height:52px;font-size:18px;text-align:center;border-radius:12px}.entry .hint{font-size:14px;color:#888;margin-top:6px}.entry .gg{display:flex;gap:10px}.entry .gbtn{height:52px;font-size:18px;border-radius:12px}.entry .big{width:100%;margin-top:22px;padding:16px;font-size:19px;font-weight:600}.entry .help{border-top:1px solid #eee;margin-top:26px;padding-top:16px;text-align:right}
+.gbtn{flex:1;height:44px;border:1px solid #d6d2c8;border-radius:10px;background:#fff;font-size:16px;cursor:pointer}
+.gbtn.on{border:2px solid #BA7517;background:#FAEEDA;color:#633806}
+.hbtn{border:none;background:none;font-size:20px;cursor:pointer;color:#666;padding:4px 8px}
+.hpanel{background:#FAEEDA;border-radius:12px;padding:12px 14px;margin:0 4px 10px;color:#633806}
+.ev .s{display:none}.ev .t{display:block}.hs{display:none}@media(pointer:coarse),(max-width:600px){.hs{display:block}}@media(max-width:600px){.grid{grid-template-columns:30px repeat(7,minmax(0,1fr))}.hr{font-size:9px;left:1px}.ev{font-size:10px;line-height:1.2;padding:2px;word-break:normal;overflow-wrap:normal}.ev .f,.ev .d{display:none}.ev .s{display:block}.ev .t{font-size:9px;opacity:.8}.fr{background:#F3F8EC;border:none;border-right:3px solid #97C459;border-radius:4px;color:#3B6D11}.fr b{font-weight:500}}.past{opacity:.5}.rt{background:#ECEAE4;color:#5F5E5A;border:none;z-index:2;font-size:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card entry" id="entry" style="display:none"><h2>לו״ז ביקורים - רועי</h2><div class="sub">ביחד דואגים שרועי מוקף באהבה 💛<br>כאן קובעים ביקור בקלות</div><label class="q" for="re">מה המייל שלך?</label><input id="re" placeholder="mail@gmail.com" type="email" autocomplete="email" style="direction:ltr" onkeydown="if(event.key==='Enter')doEnter()"><div class="hint">לשם יגיעו הזימונים לביקורים שלך</div><div id="nb" style="display:none"><div class="hint" style="margin-top:16px;font-size:16px;color:#633806">נראה שזו הפעם הראשונה שלך כאן 💛 עוד שני דברים קטנים:</div><label class="q" for="rn">איך קוראים לך?</label><input id="rn" placeholder="שם / כינוי" autocomplete="name"><div class="q">איך לפנות אלייך?</div><div class="gg"><button class="gbtn" id="gf" onclick="pickG('f')">את</button><button class="gbtn" id="gm" onclick="pickG('m')">אתה</button></div></div><div class="err" id="rerr"></div><button class="btn big" id="gob" onclick="doEnter()">המשך</button><div class="help"><div><span class="sq" style="background:#EAF3DE;border:1px dashed #639922"></span>ירוק זה פנוי. לוחצים ונרשמים, גם לחלק מהזמן.</div><div><span class="sq" style="background:#FAC775"></span>כתום זה מישהו כבר שם. אפשר להצטרף, עד 2 ביחד.</div><div><span class="sq" style="background:#E6F1FB;border:1px solid #85B7EB"></span>כחול זה הקרנה או טיפול.</div><div><span style="font-size:20px;width:22px;text-align:center">🎤</span>אפשר גם לכתוב לי בצ׳אט או להקליט ואני אשנה לבד.</div></div></div>
+<div class="card" id="app" style="display:none">
+<div class="top">
+<h1>לו״ז ביקורים - רועי</h1>
+<div class="nav"><button class="tdy" onclick="goToday()">היום</button><button aria-label="שבוע קודם" onclick="mv(-7)">→</button><button aria-label="שבוע הבא" onclick="mv(7)">←</button><span class="rng" id="rng"></span><button class="hbtn" aria-label="הסבר" onclick="toggleHelp()">❔</button></div>
+</div>
+<div class="hpanel" id="hpanel" style="display:none"><div class="help">
+<div><span class="sq" style="background:#EAF3DE;border:1px dashed #639922"></span>ירוק זה פנוי. לוחצים ונרשמים, גם לחלק מהזמן.</div>
+<div><span class="sq" style="background:#FAC775"></span>כתום זה מישהו כבר שם. אפשר להצטרף, עד 2 ביחד.</div>
+<div><span class="sq" style="background:#E6F1FB;border:1px solid #85B7EB"></span>כחול זה הקרנה או טיפול.</div>
+<div><span style="font-size:20px;width:22px;text-align:center">🎤</span>אפשר גם לכתוב לי בצ׳אט או להקליט ואני אשנה לבד.</div>
+</div><div style="font-size:13px">רק את הביקורים שלך אפשר לשנות או לבטל. למייל מגיע זימון.</div></div>
+<div class="grid hd" id="hd"></div>
+<div class="grid" id="bd"></div>
+<div id="loading" class="load">טוען…</div>
+<div class="legend">
+<span><span class="sw" style="background:#EAF3DE;border:1px dashed #639922"></span>פנוי</span>
+<span><span class="sw" style="background:#FAC775"></span>תפוס</span>
+<span><span class="sw" style="background:#FAC775;border:2px solid #854F0B"></span>שלך</span>
+<span><span class="sw" style="background:#E6F1FB;border:1px solid #85B7EB"></span>הקרנה / טיפול</span>
+</div>
+<div id="sheet"></div>
+<div class="chat">
+<div class="msgs" id="msgs"></div>
+<div class="inp">
+<input id="msg" autocomplete="off" onkeydown="if(event.key==='Enter')send()">
+<button class="ib" id="micb" aria-label="הקלטה" onclick="mic()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
+<button class="ib send" aria-label="שליחה" onclick="send()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+</div>
+</div>
+<div id="adm" style="text-align:center;margin-top:10px"></div><div class="hs" style="text-align:center;margin-top:4px"><button class="lnk" onclick="homeTip()">📲 הוספה למסך הבית</button></div>
+</div>
+</div>
+<script>
+let ME=null, PEOPLE=[];
+const G=(f,m)=>ME&&ME.g==='m'?m:f;
+const MOB=matchMedia('(max-width:600px)').matches;let H1=21;const H0=8,PX=MOB?24:34,DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'],SH=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+let start=wkStart(Date.now()), evs=[], pending=null;
+function dayStart(ms){const d=new Date(ms);d.setHours(0,0,0,0);return d.getTime()}
+function addDays(ms,n){const d=new Date(ms);d.setDate(d.getDate()+n);return dayStart(d.getTime())} function wkStart(ms){const d=new Date(dayStart(ms));d.setDate(d.getDate()-d.getDay());return d.getTime()}
+const y=h=>(h-H0)*PX;
+const hm=x=>{const h=Math.floor(x+1e-6),m=Math.round((x-h)*60);return h+':'+(m<10?'0'+m:m)};
+const hOf=(ms,ds)=>(ms-ds)/36e5;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isMine=e=>!e.free&&e.keys.indexOf(ME.key)>=0;
+const label=t=>{const p=t.replace(/\s*\u2066?\d{1,2}:\d{2}\s*[–-]\s*\d{1,2}:\d{2}\u2069?\s*$/,'').split(/\s[-–־]|[-–־]\s/);return p.length>1?p.slice(0,-1).join(' - ').trim():t};
+function dlabel(ds){const d=new Date(ds);return 'יום '+DAYS[d.getDay()]+' '+d.getDate()+'.'+(d.getMonth()+1)}
+function dayEvs(ds){const de=addDays(ds,1);return evs.filter(e=>e.sa<de&&e.sb>ds)}
+function busyAt(a,b,ignore){return evs.filter(o=>!o.free&&!o.ride&&o.id!==ignore&&o.a<b&&o.b>a).length}
+let CACHE={},GEN=0;function fetchWeek(s,cb,n){n=n||0;const g=GEN;RUN().withSuccessHandler(r=>{if(g!==GEN)return;CACHE[s]=r;if(cb)cb(r)}).withFailureHandler(()=>{if(n<2){setTimeout(()=>fetchWeek(s,cb,n+1),800*(n+1));return}if(cb&&s===start)document.getElementById('loading').textContent='משהו השתבש. נסו לרענן.'}).getRange(ME.token,s,7)}function prefetch(){[addDays(start,7),addDays(start,-7)].forEach(s=>{if(!CACHE[s])fetchWeek(s)})}function load(){const s=start,L=document.getElementById('loading');if(CACHE[s]){evs=CACHE[s];L.style.display='none';render();prefetch()}else{L.textContent='טוען…';L.style.display='block'}fetchWeek(s,r=>{if(s!==start)return;L.style.display='none';if(JSON.stringify(r)===JSON.stringify(evs))return;evs=r;render();prefetch()})}
+function block(cls,a,b,ds,inner,click,pos){a=Math.max(a,H0);b=Math.min(b,H1);if(b<=a)return '';
+return `<div class="ev ${cls}" style="top:${y(a)+1}px;height:${Math.max(y(b)-y(a)-2,14)}px;${pos||'left:2px;right:2px'}" onclick="${click}">${inner}</div>`}
+function render(){
+const today=dayStart(Date.now()),now=Date.now();H1=19;for(let i=0;i<7;i++){const ds=addDays(start,i);dayEvs(ds).forEach(o=>{if(!o.free)H1=Math.max(H1,Math.min(22,Math.ceil(hOf(o.b,ds))))})}
+let hd='<div></div>';for(let i=0;i<7;i++){const ds=addDays(start,i),d=new Date(ds);hd+=`<div class="dh ${ds===today?'today':''}"><div class="w">${SH[d.getDay()]}</div><div class="n">${d.getDate()}</div></div>`}
+document.getElementById('hd').innerHTML=hd;document.getElementById('rng').textContent=rngLabel();
+let g=`<div style="position:relative;height:${y(H1)}px">`;for(let h=H0+1;h<H1;h++)g+=`<div class="hr" style="top:${y(h)-7}px">${h}:00</div>`;g+='</div>';
+for(let i=0;i<7;i++){const ds=addDays(start,i);g+=`<div class="col" style="height:${y(H1)}px">`;
+for(let h=H0+1;h<H1;h++)g+=`<div class="hl" style="top:${y(h)}px"></div>`;
+const de=dayEvs(ds);
+const dn=de.find(o=>/ארוחת ערב/.test(o.title)),ct=dn?hOf(dn.a,ds):99;const bz=de.filter(o=>!o.free).map(o=>[hOf(o.a,ds),hOf(o.b,ds)]).sort((p,q)=>p[0]-q[0]);const gaps=(p,q)=>{const out=[];let s=p;bz.forEach(([a,b])=>{if(b<=s||a>=q)return;if(a-s>=0.5)out.push([s,a]);s=Math.max(s,b)});if(q-s>=0.5)out.push([s,q]);return out.filter(r=>r[0]<ct).map(r=>[r[0],Math.min(r[1],ct)])};de.forEach(e=>{if(e.sb<now)return;const sa=hOf(e.sa,ds),sb=hOf(e.sb,ds);if(!e.free&&!(e.slot&&e.part))return;gaps(sa,sb).forEach(([p,q])=>{const whole=e.free&&p===sa&&q===sb,big=y(q)-y(p)>44;g+=block('fr',p,q,ds,`<b>פנוי</b>${e.free&&big?'<span class="d"><br>'+esc(label(e.title))+'</span>':''}`,whole?`openFree('${e.id}')`:`openRange(${ds},${p},${q})`)})});
+const rt=e=>!e.free&&!e.ride&&!e.keys.length&&!e.slot&&!/ביקור/.test(e.title);de.filter(rt).forEach(e=>{const a=hOf(e.a,ds),b=hOf(e.b,ds);g+=block(`rt ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(e.title.split(/[.–-]/)[0])}</b>`,`openEv('${e.id}')`)});const tk=de.filter(e=>!e.free&&!rt(e)).sort((p,q)=>p.a-q.a),cols=[];
+tk.forEach(e=>{let c=0;while(cols[c]&&cols[c]>e.a)c++;cols[c]=e.b;e._c=c});
+tk.forEach(e=>{const n=tk.filter(o=>o.a<e.b&&o.b>e.a).length,c=e._c%Math.max(n,1),w=100/Math.max(n,1);
+const a=hOf(e.a,ds),b=hOf(e.b,ds),nm=e.keys.map(k=>(PEOPLE.find(p=>p.key===k)||{}).name).filter(Boolean).join(', '),sh=e.ride?(/טיפול/.test(e.title)&&!/הקרנה/.test(e.title)?'טיפול':'הקרנה')+(nm?' · '+nm:''):(nm||e.title.split(/[.–-]/)[0]);
+g+=block(`${e.ride?'rd':'tk'} ${isMine(e)?'me':''} ${e.b<now?'past':''}`,a,b,ds,`<b class="f">${esc(e.title)}</b><b class="s">${esc(sh)}</b><span class="t">${hm(a)}–${hm(b)}</span>`,`openEv('${e.id}')`,`right:calc(${c*w}% + 2px);width:calc(${w}% - 4px)`)});
+g+='</div>'}
+document.getElementById('bd').innerHTML=g}
+const MON=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];function rngLabel(){const a=new Date(start),b=new Date(addDays(start,6));if(a.getMonth()===b.getMonth())return MON[a.getMonth()]+' '+a.getFullYear();if(a.getFullYear()===b.getFullYear())return MON[a.getMonth()]+' – '+MON[b.getMonth()]+' '+b.getFullYear();return MON[a.getMonth()]+' '+a.getFullYear()+' – '+MON[b.getMonth()]+' '+b.getFullYear()}function goToday(){start=wkStart(Date.now());closeSheet();load()}function mv(n){start=addDays(start,n);closeSheet();load()}
+function topts(sel){let o='';for(let x=7;x<=22;x+=0.25)o+=`<option value="${x}" ${Math.abs(x-sel)<0.01?'selected':''}>${hm(x)}</option>`;return o}
+function closeSheet(){document.getElementById('sheet').innerHTML=''}
+function sheetHtml(title,sub,ds,a,b,buttons,extra){document.getElementById('sheet').innerHTML=`<div class="sheet"><h3>${title}</h3>${sub?`<div style="font-size:14px;color:#666;margin:-4px 0 8px">${sub}</div>`:''}<div class="row"><span>מ־</span><select id="sa">${topts(a)}</select><span>עד</span><select id="sb">${topts(b)}</select></div>${extra||''}<div class="err" id="err"></div><div class="row">${buttons}<button class="lnk" onclick="closeSheet()">סגירה</button></div></div>`;
+document.getElementById('sheet').scrollIntoView({behavior:'smooth',block:'nearest'});window._ds=ds}
+function times(){const a=+document.getElementById('sa').value,b=+document.getElementById('sb').value;if(b<=a){document.getElementById('err').textContent='שעת הסיום צריכה להיות אחרי שעת ההתחלה';return null}return [window._ds+a*36e5,window._ds+b*36e5]}
+function call(fn,args,after){GEN++;CACHE={};document.getElementById('loading').style.display='block';RUN().withSuccessHandler(r=>{if(after)after(r);else{if(r.ok){closeSheet();bot(r.msg)}else{const e=document.getElementById('err');if(e)e.textContent=r.msg;else bot(r.msg)}}load()}).withFailureHandler(()=>{bot('משהו השתבש. נסו שוב.');load()})[fn](...args)}
+function forWhom(){return ME.admin?`<div class="row" style="margin-top:8px"><span>לרשום את:</span><select id="fw" onchange="document.getElementById('fwn').style.display=this.value==='__o'?'':'none'">${PEOPLE.map(p=>`<option value="${p.key}" ${p.key===ME.key?'selected':''}>${p.name}</option>`).join('')}<option value="__o">אחר (לכתוב שם)…</option></select><input id="fwn" placeholder="שם" style="display:none;width:140px"></div>`:''}
+function fwVal(){const s=document.getElementById('fw');if(!s)return null;if(s.value==='__o')return 'name:'+document.getElementById('fwn').value.trim();return s.value}
+function openFree(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStart(e.sa);
+sheetHtml(esc(label(e.title))+' · '+dlabel(ds),'המשבצת פנויה. אפשר לבחור גם רק חלק מהזמן.',ds,hOf(e.sa,ds),hOf(e.sb,ds),`<button class="btn" onclick="doBook()">${G('אני מגיעה','אני מגיע')}</button>`,forWhom())}
+function openRange(ds,a,b){sheetHtml('זמן פנוי · '+dlabel(ds),'אפשר לבחור גם רק חלק מהזמן.',ds,a,b,`<button class="btn" onclick="doBook()">${G('אני מגיעה','אני מגיע')}</button>`,forWhom())}
+function doBook(){const t=times();if(t)call('book',[ME.token,t[0],t[1],fwVal()])}
+function openEv(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStart(e.a),a=hOf(e.a,ds),b=hOf(e.b,ds),mine=isMine(e);
+if(mine||ME.admin){let btns=`<button class="btn" onclick="doUpd('${id}')">שמירה</button>`;
+if(!e.ride||ME.admin)btns+=`<button class="lnk danger" onclick="doCancel('${id}')">${e.slot&&!e.ride?'ביטול (המשבצת תחזור להיות פנויה)':'ביטול'}</button>`;
+let extra='';if(ME.admin)extra=`<button class="lnk" style="margin-top:4px;color:#854F0B" onclick="this.nextElementSibling.style.display='flex';this.remove()">↪ להעביר לאדם אחר…</button><div class="row" style="margin-top:8px;display:none"><select id="asg"><option value="">למי להעביר?</option>${PEOPLE.filter(p=>p.key!==e.who).map(p=>`<option value="${p.key}">${p.name}</option>`).join('')}</select><button class="lnk" onclick="doAssign('${id}')">העברה</button></div>`;if(['neta','noa'].includes(ME.key))extra=`<div class="row" style="margin-top:8px"><span>שם:</span><input id="ttl" style="flex:1;min-width:200px" value="${esc(e.title)}"></div>`+extra;
+const sub=e.slot&&!e.ride?'משבצת קבועה '+hm(hOf(e.sa,ds))+'–'+hm(hOf(e.sb,ds))+'. אפשר לשנות שעות בתוכה.':'';
+sheetHtml(esc(e.title)+' · '+dlabel(ds),sub,ds,a,b,btns,extra);return}
+const n=busyAt(e.a,e.b,null);
+let btns=n<2?`<button class="btn" onclick="doBook()">${G('אני מצטרפת','אני מצטרף')}</button>`:'';
+btns+=`<button class="lnk" onclick="call('requestSwap',[ME.token,'${id}'])">בקשת החלפה</button>`;
+sheetHtml(esc(e.title)+' · '+dlabel(ds),n<2?'אפשר להצטרף, גם רק לחלק מהזמן. או לבקש להחליף.':'בזמן הזה כבר יש שני מבקרים. אפשר לבקש להחליף.',ds,a,b,btns)}
+function doUpd(id){const t=times();if(t)call('update',[ME.token,id,t[0],t[1],(document.getElementById('ttl')||{}).value||null])}
+function doCancel(id){if(confirm('לבטל?'))call('cancel',[ME.token,id])}
+function doAssign(id){const v=document.getElementById('asg').value;if(!v)return;call('assign',[ME.token,id,v])}
+function bot(t){const m=document.getElementById('msgs');m.insertAdjacentHTML('beforeend',`<div class="bub bot">${t}</div>`);m.scrollTop=m.scrollHeight}
+function mineB(t){const m=document.getElementById('msgs');m.insertAdjacentHTML('beforeend',`<div class="bub mine">${esc(t)}</div>`);m.scrollTop=m.scrollHeight}
+function ask(q,act){pending=act;bot(`${q}<div class="row cf" style="margin-top:8px"><button class="btn" onclick="ok(1)">כן</button><button class="lnk" onclick="ok(0)">לא</button></div>`)}
+function ok(v){document.querySelectorAll('.cf').forEach(b=>b.remove());const p=pending;pending=null;if(!p)return;if(!v){bot('בסדר, לא שיניתי כלום.');return}p()}
+function parseDay(t){const today=dayStart(Date.now());
+if(/מחרתיים/.test(t))return addDays(today,2);if(/מחר/.test(t))return addDays(today,1);if(/היום|הערב|עכשיו/.test(t))return today;
+const dm=t.match(/(\d{1,2})[.\/](\d{1,2})/);if(dm){const d=new Date();d.setMonth(+dm[2]-1,+dm[1]);let ds=dayStart(d.getTime());if(ds<today){d.setFullYear(d.getFullYear()+1);ds=dayStart(d.getTime())}return ds}
+for(const i of [2,3,4,5,0,1,6]){if(t.includes(DAYS[i])){let ds=today;while(new Date(ds).getDay()!==i)ds=addDays(ds,1);return ds}}return null}
+function parseTimes(t){const s=t.replace(/(\d{1,2})[.\/](\d{1,2})(?![:\d])/g,' ');return (s.match(/\d{1,2}(:\d{2})?/g)||[]).map(x=>{const[p,q]=x.split(':');let h=+p+(q?+q/60:0);if(h<8)h+=12;return h})}
+function withDay(ds,fn){if(ds>=start&&ds<addDays(start,7)){fn();return}start=wkStart(ds);const s=start;if(CACHE[s]){evs=CACHE[s];render();fn();load();return}document.getElementById('loading').style.display='block';fetchWeek(s,r=>{if(s!==start)return;evs=r;document.getElementById('loading').style.display='none';render();fn();prefetch()})}
+function send(){const inp=document.getElementById('msg');let t=inp.value.trim();if(!t)return;mineB(t);inp.value='';t=t.replace(/(\d{1,2})\.(\d{2})/g,(m,h,q)=>(+q>12||+q===0)&&+h<24&&+q<60?h+':'+q:m);
+const ds=parseDay(t);if(ds===null){bot('לא הבנתי איזה יום. אפשר לכתוב למשל: "רביעי מ־11 עד 16" או "מחר מ־4 עד 7".');return}
+withDay(ds,()=>chat(t,ds))}
+function chat(t,ds){const de=dayEvs(ds),my=de.filter(isMine),nums=parseTimes(t);
+if(/להעביר|תעביר|העבר/.test(t)&&ME.admin){const p=PEOPLE.find(p=>t.includes(p.name)&&p.key!==ME.key);const e=(/הקרנה|הסעה|טיפול/.test(t)?de.find(x=>x.ride):null)||my[0];
+if(!p||!e){bot('לא הבנתי למי או מה להעביר. אפשר ללחוץ על הבלוק בלוח ולבחור "להעביר ל־".');return}
+ask(`להעביר את "${esc(e.title)}" ב${dlabel(ds)} ל${p.name}?`,()=>call('assign',[ME.token,e.id,p.key]));return}
+if(/בטל|לבטל|ביטול/.test(t)){if(!my.length){bot(`אין לך ביקור ב${dlabel(ds)}.`);return}const e=my[0];
+ask(`לבטל את "${esc(e.title)}" ב${dlabel(ds)}, ${hm(hOf(e.a,ds))}–${hm(hOf(e.b,ds))}?`,()=>call('cancel',[ME.token,e.id]));return}
+if(/קבוע|כל יום|ימי /.test(t)){bot('כאן אפשר לקבוע יום אחד בכל פעם. ביקור קבוע כל שבוע – דרך נטע.');return}
+const op=PEOPLE.find(p=>p.key!==ME.key&&t.includes(p.name));if(op&&!ME.admin){bot('כאן אפשר לקבוע רק בשבילך.');return}
+if(nums.length<2||nums[1]<=nums[0]){bot('לא הבנתי את השעות. אפשר לכתוב למשל: "רביעי מ־11 עד 16".');return}
+const a=ds+nums[0]*36e5,b=ds+nums[1]*36e5;if(op){ask(`לרשום את ${esc(op.name)} ב${dlabel(ds)}, ${hm(nums[0])}–${hm(nums[1])}?`,()=>call('book',[ME.token,a,b,op.key]));return}const e=my.find(o=>o.a<b&&o.b>a);
+if(e){ask(`לשנות את "${esc(e.title)}" ב${dlabel(ds)} ל־${hm(nums[0])}–${hm(nums[1])}?`,()=>call('update',[ME.token,e.id,a,b]));return}
+ask(`לרשום אותך ב${dlabel(ds)}, ${hm(nums[0])}–${hm(nums[1])}?`,()=>call('book',[ME.token,a,b,null]))}
+let rec=null;
+function mic(){const btn=document.getElementById('micb'),SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(rec){rec.stop();return}
+const tip=()=>bot('ההקלטה לא זמינה כאן. אפשר ללחוץ על סמל המיקרופון במקלדת של הטלפון ולדבר.');
+if(!SR){tip();return}
+try{rec=new SR();rec.lang='he-IL';rec.interimResults=true;btn.classList.add('rec');
+rec.onresult=e=>{document.getElementById('msg').value=[...e.results].map(r=>r[0].transcript).join('')};
+rec.onend=()=>{btn.classList.remove('rec');rec=null;if(document.getElementById('msg').value)send()};
+rec.onerror=()=>{btn.classList.remove('rec');rec=null;tip()};rec.start()}catch(e){btn.classList.remove('rec');rec=null;tip()}}
+function homeTip(){const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);bot(ios?'כדי לשים את הלוח במסך הבית: <b>1.</b> לוחצים על כפתור השיתוף <b>⬆︎</b> (בספארי הוא למטה, בכרום למעלה). <b>2.</b> גוללים ובוחרים <b>"הוסף למסך הבית"</b>. <b>3.</b> לוחצים <b>"הוסף"</b>.':'כדי לשים את הלוח במסך הבית: <b>1.</b> לוחצים על <b>⋮</b> למעלה בכרום. <b>2.</b> בוחרים <b>"הוספה למסך הבית"</b>. <b>3.</b> לוחצים <b>"הוספה"</b>.');document.getElementById('msg').scrollIntoView({behavior:'smooth',block:'center'})}
+function showCancelled(){RUN().withSuccessHandler(list=>{if(!list.length){bot('אין ביקורים מבוטלים לשחזור.');return}
+bot('ביקורים שבוטלו:<br>'+list.map(x=>{const ds=dayStart(x.a);return `${esc(x.title)} · ${dlabel(ds)} ${hm(hOf(x.a,ds))} (בוטל ע״י ${esc(x.by)}) <button class="lnk" onclick="call('restore',[ME.token,'${x.id}'])">שחזור</button>`}).join('<br>'))}).listCancelled(ME.token)}
+const API_URL='https://script.google.com/macros/s/AKfycbx_uSXV_jB7vOHSA-ZbRUcN9rLt8ueeRVs73uunGQFJexedNvzkAqTpg9lB880XxcRP/exec';function RUN(){let s=()=>{},f=()=>{};const p=new Proxy({},{get(_,k){if(k==='withSuccessHandler')return h=>{s=h;return p};if(k==='withFailureHandler')return h=>{f=h;return p};return (...a)=>{fetch(API_URL,{method:'POST',body:JSON.stringify({fn:k,args:a})}).then(r=>r.json()).then(j=>j.ok?s(j.r):f(new Error(j.err)),e=>f(e))}}});return p}const LS='roy_visits_token';
+function lsGet(){try{return localStorage.getItem(LS)}catch(e){return null}}
+function lsSet(v){try{localStorage.setItem(LS,v)}catch(e){}}
+function toggleHelp(){const h=document.getElementById('hpanel');h.style.display=h.style.display==='none'?'block':'none'}
+let gPick=null;
+function pickG(g){gPick=g;document.getElementById('gf').classList.toggle('on',g==='f');document.getElementById('gm').classList.toggle('on',g==='m')}
+function showEntry(){document.getElementById('app').style.display='none';document.getElementById('entry').style.display='block'}
+function doEnter(){const nb=document.getElementById('nb');if(nb.style.display!=='none'){doRegister();return}const e=document.getElementById('re').value.trim(),er=document.getElementById('rerr');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){er.textContent='המייל לא נראה תקין. אפשר לבדוק שוב?';return}er.textContent='רגע…';RUN().withSuccessHandler(r=>{er.textContent='';if(r&&r.ok){ME=r.me;PEOPLE=r.people;startApp()}else{nb.style.display='block';document.getElementById('gob').textContent='כניסה ללוח';document.getElementById('rn').focus()}}).withFailureHandler(()=>{er.textContent='משהו השתבש. נסו שוב.'}).findByEmail(e)}
+function doRegister(){const n=document.getElementById('rn').value,e=document.getElementById('re').value,er=document.getElementById('rerr');
+if(!n.trim()){er.textContent='צריך למלא שם.';return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.trim())){er.textContent='המייל לא נראה תקין. אפשר לבדוק שוב?';return}
+if(!gPick){er.textContent='צריך לבחור "את" או "אתה".';return}er.textContent='רגע…';
+RUN().withSuccessHandler(r=>{if(!r.ok){er.textContent=r.msg;return}er.textContent='';ME=r.me;PEOPLE=r.people;startApp()}).withFailureHandler(()=>{er.textContent='משהו השתבש. נסו שוב.'}).register(n,e,gPick)}
+function startApp(){lsSet(ME.token);document.getElementById('entry').style.display='none';document.getElementById('app').style.display='block';
+document.getElementById('msg').placeholder=G('מה תרצי לעשות?','מה תרצה לעשות?');
+document.getElementById('msgs').innerHTML='';
+bot(`היי ${esc(ME.name)} 👋<br>${G('אם תרצי לקבוע שעת הגעה, לשנות או לבטל, רק תכתבי או תקליטי לי.','אם תרצה לקבוע שעת הגעה, לשנות או לבטל, רק תכתוב או תקליט לי.')}<br><span style="color:#5f5e5a">למשל: "רביעי מ־11 עד 16" או "לבטל את רביעי".<br>אפשר גם ללחוץ ישר על הלוח.</span>`);
+document.getElementById('adm').innerHTML=ME.admin?'<button class="lnk" onclick="showCancelled()">ביקורים שבוטלו</button>':'';
+load()}
+if(ME){startApp()}else{const t=new URLSearchParams(location.search).get('u')||lsGet();if(t){RUN().withSuccessHandler(r=>{if(r){ME=r.me;PEOPLE=r.people;startApp()}else showEntry()}).withFailureHandler(showEntry).whoAmI(t)}else showEntry()}
+</script>
+</body>
+</html>
