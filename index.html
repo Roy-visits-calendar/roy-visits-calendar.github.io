@@ -160,10 +160,13 @@ function ok(v){document.querySelectorAll('.cf').forEach(b=>b.remove());const p=p
 function parseDay(t){const today=dayStart(Date.now());
 if(/מחרתיים/.test(t))return addDays(today,2);if(/מחר/.test(t))return addDays(today,1);if(/היום|הערב|עכשיו/.test(t))return today;
 const dm=t.match(/(\d{1,2})[.\/](\d{1,2})/);if(dm){const d=new Date();d.setMonth(+dm[2]-1,+dm[1]);let ds=dayStart(d.getTime());if(ds<today){d.setFullYear(d.getFullYear()+1);ds=dayStart(d.getTime())}return ds}
-for(const i of [2,3,4,5,0,1,6]){if(t.includes(DAYS[i])){let ds=today;while(new Date(ds).getDay()!==i)ds=addDays(ds,1);return ds}}return null}
-function parseTimes(t){const s=t.replace(/(\d{1,2})[.\/](\d{1,2})(?![:\d])/g,' ');return (s.match(/\d{1,2}(:\d{2})?/g)||[]).map(x=>{const[p,q]=x.split(':');let h=+p+(q?+q/60:0);if(h<8)h+=12;return h})}
+for(const i of [2,3,4,5,0,1,6]){if(t.includes(DAYS[i])){let ds=today;while(new Date(ds).getDay()!==i)ds=addDays(ds,1);if(/הבא|הבאה/.test(t)&&ds<addDays(wkStart(today),7))ds=addDays(ds,7);return ds}}return null}
+function heNums(t){const W=[['אחת עשרה|אחד עשר',11],['שתים עשרה|שתיים עשרה|שתים עשר|שנים עשר',12],['אחת|אחד',1],['שתיים|שתים|שניים',2],['שלוש|שלושה|שלש',3],['ארבע|ארבעה',4],['חמש|חמישה',5],['שש|שישה',6],['שבע|שבעה',7],['שמונה',8],['תשע|תשעה',9],['עשר|עשרה',10]];
+for(const[w,n]of W)t=t.replace(new RegExp('(^|[^א-ת])([ובלמה]{0,2})('+w+')(?![א-ת])','g'),(m,a,b)=>a+b+n);
+return t.replace(/(\d{1,2})\s*(?:ו)?חצי(?![א-ת])/g,'$1:30').replace(/(\d{1,2})\s*ורבע(?![א-ת])/g,'$1:15')}
+function parseTimes(t){const am=/בבוקר/.test(t),pm=/בערב|בלילה/.test(t);const s=t.replace(/(\d{1,2})[.\/](\d{1,2})(?![:\d])/g,' ');return (s.match(/\d{1,2}(:\d{2})?/g)||[]).map(x=>{const[p,q]=x.split(':');let h=+p+(q?+q/60:0);if(pm&&h<12)h+=12;else if(h<8&&!(am&&h>=6))h+=12;return h})}
 function withDay(ds,fn){if(ds>=start&&ds<addDays(start,7)){fn();return}start=wkStart(ds);const s=start;if(CACHE[s]){evs=CACHE[s];render();fn();load();return}document.getElementById('loading').style.display='block';fetchWeek(s,r=>{if(s!==start)return;evs=r;document.getElementById('loading').style.display='none';render();fn();prefetch()})}
-function send(){const inp=document.getElementById('msg');let t=inp.value.trim();if(!t)return;mineB(t);inp.value='';t=t.replace(/(\d{1,2})\.(\d{2})/g,(m,h,q)=>(+q>12||+q===0)&&+h<24&&+q<60?h+':'+q:m);
+function send(){const inp=document.getElementById('msg');let t=inp.value.trim();if(!t)return;mineB(t);inp.value='';t=heNums(t).replace(/(\d{1,2})\.(\d{2})/g,(m,h,q)=>(+q>12||+q===0)&&+h<24&&+q<60?h+':'+q:m);
 const ds=parseDay(t);if(ds===null){bot('לא הבנתי איזה יום. אפשר לכתוב למשל: "רביעי מ־11 עד 16" או "מחר מ־4 עד 7".');return}
 withDay(ds,()=>chat(t,ds))}
 function chat(t,ds){const de=dayEvs(ds),my=de.filter(isMine),nums=parseTimes(t);
