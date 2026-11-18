@@ -136,7 +136,7 @@ function closeSheet(){document.getElementById('sheet').innerHTML=''}document.add
 function sheetHtml(title,sub,ds,a,b,buttons,extra){document.getElementById('sheet').innerHTML=`<div class="sheet"><h3>${title}</h3>${sub?`<div style="font-size:14px;color:#666;margin:-4px 0 8px">${sub}</div>`:''}<div class="row"><span>מ־</span><select id="sa">${topts(a)}</select><span>עד</span><select id="sb">${topts(b)}</select></div>${extra||''}<div class="err" id="err"></div><div class="row">${buttons}<button class="lnk" onclick="closeSheet()">סגירה</button></div></div>`;
 document.getElementById('sheet').scrollIntoView({behavior:'smooth',block:'nearest'});window._ds=ds}
 function times(){const a=+document.getElementById('sa').value,b=+document.getElementById('sb').value;if(b<=a){document.getElementById('err').textContent='שעת הסיום צריכה להיות אחרי שעת ההתחלה';return null}return [window._ds+a*36e5,window._ds+b*36e5]}
-function call(fn,args,after){GEN++;CACHE={};document.getElementById('loading').style.display='block';RUN().withSuccessHandler(r=>{if(after)after(r);else{if(r.ok){closeSheet();bot(r.msg)}else{const e=document.getElementById('err');if(e)e.textContent=r.msg;else bot(r.msg)}}load()}).withFailureHandler(()=>{bot('משהו השתבש. נסו שוב.');load()})[fn](...args)}
+function call(fn,args,after){GEN++;CACHE={};document.getElementById('loading').style.display='block';RUN().withSuccessHandler(r=>{if(after)after(r);else{if(r.ok){closeSheet();bot(r.msg);if(/^book/.test(fn)&&ME.key!=='noa')bot(NOA)}else{const e=document.getElementById('err');if(e)e.textContent=r.msg;else bot(r.msg)}}load()}).withFailureHandler(()=>{bot('משהו השתבש. נסו שוב.');load()})[fn](...args)}
 function forWhom(){return ME.admin?`<div class="row" style="margin-top:8px"><span>לרשום את:</span><select id="fw" onchange="document.getElementById('fwn').style.display=this.value==='__o'?'':'none'">${PEOPLE.map(p=>`<option value="${p.key}" ${p.key===ME.key?'selected':''}>${p.name}</option>`).join('')}<option value="__o">אחר (לכתוב שם)…</option></select><input id="fwn" placeholder="שם" style="display:none;width:140px"></div><label class="row" style="margin-top:6px;gap:6px;cursor:pointer"><input type="checkbox" id="wk"> כל שבוע עד סוף ההקרנות</label>`:''}
 function fwVal(){const s=document.getElementById('fw');if(!s)return null;if(s.value==='__o')return 'name:'+document.getElementById('fwn').value.trim();return s.value}
 function openFree(id){const e=evs.find(x=>x.id===id);if(!e)return;const ds=dayStart(e.sa);
@@ -149,11 +149,12 @@ if(mine||ME.admin){let btns=`<button class="btn" onclick="doUpd('${id}')">שמי
 if(!e.ride||ME.admin)btns+=`<button class="lnk danger" onclick="doCancel('${id}')">${e.slot&&!e.ride?'ביטול (המשבצת תחזור להיות פנויה)':'ביטול'}</button>`;
 let extra='';if(ME.admin)extra=`<button class="btn2" style="margin-top:8px" onclick="this.nextElementSibling.style.display='flex';this.remove()">👤 להעביר לאדם אחר</button><div class="row" style="margin-top:8px;display:none"><select id="asg"><option value="">למי להעביר?</option>${PEOPLE.filter(p=>p.key!==e.who).map(p=>`<option value="${p.key}">${p.name}</option>`).join('')}</select><button class="btn2" onclick="doAssign('${id}')">העברה</button></div>`;if(['neta','noa'].includes(ME.key))extra=`<div class="row" style="margin-top:8px"><span>שם:</span><input id="ttl" style="flex:1;min-width:200px" value="${esc(e.title)}"></div>`+extra;
 const sub=e.slot&&!e.ride?'משבצת קבועה '+hm(hOf(e.sa,ds))+'–'+hm(hOf(e.sb,ds))+(ME.admin?'. אפשר לשנות לכל שעה (מנהלים).':'. אפשר לשנות שעות בתוכה.'):'';
-sheetHtml(esc(e.title)+' · '+dlabel(ds),sub,ds,a,b,btns,extra);return}
+sheetHtml(esc(e.title)+' · '+dlabel(ds),sub+(mine&&ME.key!=='noa'?(sub?'<br>':'')+NOA:''),ds,a,b,btns,extra);return}
 const n=busyAt(e.a,e.b,null);
 let btns=n<2?`<button class="btn" onclick="doBook()">${G('אני מצטרפת','אני מצטרף')}</button>`:'';
 btns+=`<button class="lnk" onclick="call('requestSwap',[ME.token,'${id}'])">בקשת החלפה</button>`;
 sheetHtml(esc(e.title)+' · '+dlabel(ds),n<2?'אפשר להצטרף, גם רק לחלק מהזמן. או לבקש להחליף.':'בזמן הזה כבר יש שני מבקרים. אפשר לבקש להחליף.',ds,a,b,btns)}
+const NOA='📱 לפני שיוצאים, תשלחו לנועה הודעה או תתקשרו אליה.';
 function doUpd(id){const t=times();if(t)call('update',[ME.token,id,t[0],t[1],(document.getElementById('ttl')||{}).value||null])}
 function doCancel(id){if(confirm('לבטל?'))call('cancel',[ME.token,id])}
 function doAssign(id){const v=document.getElementById('asg').value;if(!v)return;call('assign',[ME.token,id,v])}
