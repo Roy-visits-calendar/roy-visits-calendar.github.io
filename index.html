@@ -106,7 +106,7 @@ const label=t=>{const p=t.replace(/\s*\u2066?\d{1,2}:\d{2}\s*[–-]\s*\d{1,2}:\d
 function dlabel(ds){const d=new Date(ds);return 'יום '+DAYS[d.getDay()]+' '+d.getDate()+'.'+(d.getMonth()+1)}
 function dayEvs(ds){const de=addDays(ds,1);return evs.filter(e=>e.sa<de&&e.sb>ds)}
 function busyAt(a,b,ignore){return evs.filter(o=>!o.free&&!o.ride&&o.id!==ignore&&o.a<b&&o.b>a).length}
-let CACHE={},GEN=0;function fetchWeek(s,cb,n){n=n||0;const g=GEN;RUN().withSuccessHandler(r=>{if(g!==GEN)return;CACHE[s]=r;if(cb)cb(r)}).withFailureHandler(()=>{if(n<2){setTimeout(()=>fetchWeek(s,cb,n+1),800*(n+1));return}if(cb&&s===start)document.getElementById('loading').textContent='משהו השתבש. נסו לרענן.'}).getRange(ME.token,s,7)}function prefetch(){[addDays(start,7),addDays(start,-7)].forEach(s=>{if(!CACHE[s])fetchWeek(s)})}function load(){const s=start,L=document.getElementById('loading');if(CACHE[s]){evs=CACHE[s];L.style.display='none';render();prefetch()}else{L.textContent='טוען…';L.style.display='block'}fetchWeek(s,r=>{if(s!==start)return;L.style.display='none';if(JSON.stringify(r)===JSON.stringify(evs))return;evs=r;render();prefetch()})}
+let CACHE={},GEN=0;function fetchWeek(s,cb,n){n=n||0;const g=GEN;RUN().withSuccessHandler(r=>{if(g!==GEN)return;CACHE[s]=r;try{localStorage.setItem('roy_wk',JSON.stringify(CACHE))}catch(e){}if(cb)cb(r)}).withFailureHandler(()=>{if(n<2){setTimeout(()=>fetchWeek(s,cb,n+1),800*(n+1));return}if(cb&&s===start)document.getElementById('loading').textContent='משהו השתבש. נסו לרענן.'}).getRange(ME.token,s,7)}function prefetch(){[addDays(start,7),addDays(start,-7)].forEach(s=>{if(!CACHE[s])fetchWeek(s)})}function load(){const s=start,L=document.getElementById('loading');if(CACHE[s]){evs=CACHE[s];L.style.display='none';render();prefetch()}else{L.textContent='טוען…';L.style.display='block'}fetchWeek(s,r=>{if(s!==start)return;L.style.display='none';if(JSON.stringify(r)===JSON.stringify(evs))return;evs=r;render();prefetch()})}
 function block(cls,a,b,ds,inner,click,pos){a=Math.max(a,H0);b=Math.min(b,H1);if(b<=a)return '';
 return `<div class="ev ${cls}" style="top:${y(a)+1}px;height:${Math.max(y(b)-y(a)-2,14)}px;${pos||'left:2px;right:2px'}" onclick="${click}">${inner}</div>`}
 function render(){
@@ -200,13 +200,16 @@ function doRegister(){const n=document.getElementById('rn').value,e=document.get
 if(!n.trim()){er.textContent='צריך למלא שם.';return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.trim())){er.textContent='המייל לא נראה תקין. אפשר לבדוק שוב?';return}
 if(!gPick){er.textContent='צריך לבחור "את" או "אתה".';return}er.textContent='רגע…';
 RUN().withSuccessHandler(r=>{if(!r.ok){er.textContent=r.msg;return}er.textContent='';ME=r.me;PEOPLE=r.people;startApp()}).withFailureHandler(()=>{er.textContent='משהו השתבש. נסו שוב.'}).register(n,e,gPick)}
-function startApp(){lsSet(ME.token);document.getElementById('entry').style.display='none';document.getElementById('app').style.display='block';
+function saveMe(){try{localStorage.setItem('roy_me',JSON.stringify({me:ME,people:PEOPLE}))}catch(e){}}
+function startApp(){lsSet(ME.token);saveMe();document.getElementById('entry').style.display='none';document.getElementById('app').style.display='block';
 document.getElementById('msg').placeholder=G('מה תרצי לעשות?','מה תרצה לעשות?');
 document.getElementById('msgs').innerHTML='';
 bot(`היי ${esc(ME.name)} 👋<br>${G('אם תרצי לקבוע שעת הגעה, לשנות או לבטל, רק תכתבי או תקליטי לי.','אם תרצה לקבוע שעת הגעה, לשנות או לבטל, רק תכתוב או תקליט לי.')}<br><span style="color:#5f5e5a">למשל: "רביעי מ־11 עד 16" או "לבטל את רביעי".<br>אפשר גם ללחוץ ישר על הלוח.</span>`);
 document.getElementById('adm').innerHTML=ME.admin?'<button class="lnk" onclick="showCancelled()">ביקורים שבוטלו</button>':'';
 load()}
-if(ME){startApp()}else{const t=new URLSearchParams(location.search).get('u')||lsGet();if(t){RUN().withSuccessHandler(r=>{if(r){ME=r.me;PEOPLE=r.people;startApp()}else showEntry()}).withFailureHandler(showEntry).whoAmI(t)}else showEntry()}
+if(ME){startApp()}else{const t=new URLSearchParams(location.search).get('u')||lsGet();let cm=null;try{cm=JSON.parse(localStorage.getItem('roy_me'))}catch(e){}
+if(t&&cm&&cm.me&&cm.me.token===t){ME=cm.me;PEOPLE=cm.people;try{CACHE=JSON.parse(localStorage.getItem('roy_wk'))||{}}catch(e){CACHE={}}startApp();RUN().withSuccessHandler(r=>{if(!r){try{localStorage.removeItem('roy_me');localStorage.removeItem('roy_wk')}catch(e){}location.reload();return}ME=r.me;PEOPLE=r.people;saveMe()}).whoAmI(t)}
+else if(t){RUN().withSuccessHandler(r=>{if(r){ME=r.me;PEOPLE=r.people;startApp()}else showEntry()}).withFailureHandler(showEntry).whoAmI(t)}else showEntry()}
 </script>
 </body>
 </html>
